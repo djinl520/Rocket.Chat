@@ -55,7 +55,11 @@ export const useMediaPermissions = (name: MediaDevices): [isPermissionDenied: bo
 	});
 
 	useEffect(() => {
-		handleMount();
+		try {
+			handleMount();
+		} catch (error) {
+			console.log('not allowed useEffect', JSON.stringify(error));
+		}
 	}, [handleMount]);
 
 	console.log('isPermissionDenied', isPermissionDenied);
