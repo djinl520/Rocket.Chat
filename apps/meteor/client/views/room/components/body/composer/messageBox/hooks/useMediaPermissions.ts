@@ -33,7 +33,7 @@ export const useMediaPermissions = (name: MediaDevices): [isPermissionDenied: bo
 			}
 		}
 		console.log('mediaDevices', navigator.mediaDevices);
-		console.log('enumerate', navigator.mediaDevices?.enumerateDevices());
+		// console.log('enumerate', navigator.mediaDevices?.enumerateDevices());
 		// const check = (await navigator.mediaDevices?.enumerateDevices?.())?.some(({ kind }) => kind === getDeviceKind(name));
 		console.log('check', check);
 
