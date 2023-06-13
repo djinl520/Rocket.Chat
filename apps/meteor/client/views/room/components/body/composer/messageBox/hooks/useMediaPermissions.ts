@@ -26,6 +26,7 @@ export const useMediaPermissions = (name: MediaDevices): [isPermissionDenied: bo
 				};
 				return;
 			} catch (error) {
+				console.log('not allowed handleMount', JSON.stringify(error));
 				console.warn(error);
 			}
 		}
@@ -45,6 +46,8 @@ export const useMediaPermissions = (name: MediaDevices): [isPermissionDenied: bo
 				return;
 			}
 		} catch (error) {
+			console.log('not allowed enumerate', JSON.stringify(error));
+
 			console.warn(error);
 		}
 	});
