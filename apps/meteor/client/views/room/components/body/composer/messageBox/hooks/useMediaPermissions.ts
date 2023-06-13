@@ -16,12 +16,14 @@ export const useMediaPermissions = (name: MediaDevices): [isPermissionDenied: bo
 	const [isPermissionDenied, setIsPermissionDenied] = useState(false);
 
 	const handleMount = useMutableCallback(async (): Promise<void> => {
+		console.log('navigator.permissions', Boolean(navigator.permissions));
 		if (navigator.permissions) {
 			try {
 				const permissionStatus = await navigator.permissions.query({ name: name as PermissionName });
 				console.log('permissionStatus', permissionStatus.state);
 				setIsPermissionDenied(permissionStatus.state === 'denied');
 				permissionStatus.onchange = (): void => {
+					console.log('permissionStatus.onchange', permissionStatus.state);
 					setIsPermissionDenied(permissionStatus.state === 'denied');
 				};
 				return;
@@ -32,7 +34,7 @@ export const useMediaPermissions = (name: MediaDevices): [isPermissionDenied: bo
 		}
 		console.log('mediaDevices', navigator.mediaDevices);
 		console.log('enumerate', navigator.mediaDevices?.enumerateDevices());
-		const check = (await navigator.mediaDevices?.enumerateDevices?.())?.some(({ kind }) => kind === getDeviceKind(name));
+		// const check = (await navigator.mediaDevices?.enumerateDevices?.())?.some(({ kind }) => kind === getDeviceKind(name));
 		console.log('check', check);
 
 		if (!navigator.mediaDevices?.enumerateDevices) {
