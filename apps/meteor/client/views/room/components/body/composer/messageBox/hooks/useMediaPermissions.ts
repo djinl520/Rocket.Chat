@@ -19,6 +19,7 @@ export const useMediaPermissions = (name: MediaDevices): [isPermissionDenied: bo
 		if (navigator.permissions) {
 			try {
 				const permissionStatus = await navigator.permissions.query({ name: name as PermissionName });
+				console.log('permissionStatus', permissionStatus.state);
 				setIsPermissionDenied(permissionStatus.state === 'denied');
 				permissionStatus.onchange = (): void => {
 					setIsPermissionDenied(permissionStatus.state === 'denied');
@@ -28,6 +29,10 @@ export const useMediaPermissions = (name: MediaDevices): [isPermissionDenied: bo
 				console.warn(error);
 			}
 		}
+		console.log('mediaDevices', navigator.mediaDevices);
+		console.log('enumerate', navigator.mediaDevices?.enumerateDevices());
+		const check = (await navigator.mediaDevices?.enumerateDevices?.())?.some(({ kind }) => kind === getDeviceKind(name));
+		console.log('check', check);
 
 		if (!navigator.mediaDevices?.enumerateDevices) {
 			setIsPermissionDenied(true);
@@ -48,5 +53,6 @@ export const useMediaPermissions = (name: MediaDevices): [isPermissionDenied: bo
 		handleMount();
 	}, [handleMount]);
 
+	console.log('isPermissionDenied', isPermissionDenied);
 	return [isPermissionDenied, setIsPermissionDenied];
 };
