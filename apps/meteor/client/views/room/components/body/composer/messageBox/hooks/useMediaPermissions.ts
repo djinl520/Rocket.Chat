@@ -19,13 +19,17 @@ export const useMediaPermissions = (name: MediaDevices): [isPermissionDenied: bo
 		console.log('navigator.permissions', Boolean(navigator.permissions));
 		if (navigator.permissions) {
 			try {
-				const permissionStatus = await navigator.permissions.query({ name: name as PermissionName });
-				console.log('permissionStatus', permissionStatus.state);
-				setIsPermissionDenied(permissionStatus.state === 'denied');
-				permissionStatus.onchange = (): void => {
-					console.log('permissionStatus.onchange', permissionStatus.state);
-					setIsPermissionDenied(permissionStatus.state === 'denied');
-				};
+				const permissionStatus = await navigator.permissions
+					.query({ name: name as PermissionName })
+					.catch((e) => console.log('not allowed query catch', JSON.stringify(e)));
+				console.log('permissionStatus', permissionStatus?.state);
+				setIsPermissionDenied(permissionStatus?.state === 'denied');
+				if (permissionStatus) {
+					permissionStatus.onchange = (): void => {
+						console.log('permissionStatus.onchange', permissionStatus.state);
+						setIsPermissionDenied(permissionStatus.state === 'denied');
+					};
+				}
 				return;
 			} catch (error) {
 				console.log('not allowed handleMount', JSON.stringify(error));
@@ -43,7 +47,11 @@ export const useMediaPermissions = (name: MediaDevices): [isPermissionDenied: bo
 		}
 
 		try {
-			if (!(await navigator.mediaDevices.enumerateDevices()).some(({ kind }) => kind === getDeviceKind(name))) {
+			if (
+				!(
+					await navigator.mediaDevices.enumerateDevices().catch((e) => console.log('not allowed enumerate catch', JSON.stringify(e)))
+				)?.some(({ kind }) => kind === getDeviceKind(name))
+			) {
 				setIsPermissionDenied(true);
 				return;
 			}
